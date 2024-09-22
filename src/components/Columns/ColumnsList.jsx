@@ -27,6 +27,7 @@ export default function ColumnsList() {
             <ColumnItem key={item.id}></ColumnItem>
           ))}
         </div>
+        {/* end column list */}
         <button
           className="
             h-[60px]
@@ -60,6 +61,7 @@ export default function ColumnsList() {
           </svg>
           Add Column
         </button>
+        {/* end button */}
       </div>
     </div>
   );

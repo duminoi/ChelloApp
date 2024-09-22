@@ -17,6 +17,7 @@ const chelloReducer = createSlice({
     value: null,
     inputEmail: "",
     apiKey: JSON.parse(localStorage.getItem("apiKey")) || false,
+    isLoading: null,
   },
   reducers: {
     getEmail: (state, action) => {
@@ -27,10 +28,12 @@ const chelloReducer = createSlice({
     builder
       .addCase(fetchApikey.pending, (state) => {
         toast("Vui lòng chờ");
+        state.isLoading = true;
       })
       .addCase(fetchApikey.fulfilled, (state, action) => {
         toast("Đăng nhập thành công");
         console.log(action.payload.data);
+        state.isLoading = false;
         state.apiKey = action.payload.data.apiKey;
         localStorage.setItem(
           "apiKey",
