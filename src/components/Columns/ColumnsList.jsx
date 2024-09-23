@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ColumnItem from "./ColumnItem";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTasks, postTasks } from "../../store/taskReducer";
 
 export default function ColumnsList() {
-  const colums = [
-    { id: 1, title: "Todo" },
-    { id: 2, title: "Todo" },
-    { id: 3, title: "Todo" },
-  ];
+  console.log("vào columnsList");
+
+  const dispatch = useDispatch();
+  const { apiKey } = useSelector((state) => state.chello);
+  const { columns } = useSelector((state) => state.tasks);
+  console.log("columns", columns);
+
+  const handleAddColumn = () => {
+    dispatch(postTasks(data));
+  };
+  useEffect(() => {
+    dispatch(fetchTasks(apiKey));
+  }, []);
   return (
     <div
       className="
@@ -23,12 +33,13 @@ export default function ColumnsList() {
     >
       <div className="m-auto flex gap-4">
         <div className="flex gap-4">
-          {colums.map((item) => (
-            <ColumnItem key={item.id}></ColumnItem>
+          {columns.map((item) => (
+            <ColumnItem key={item._id} {...item}></ColumnItem>
           ))}
         </div>
         {/* end column list */}
         <button
+          onClick={handleAddColumn}
           className="
             h-[60px]
             w-[350px]

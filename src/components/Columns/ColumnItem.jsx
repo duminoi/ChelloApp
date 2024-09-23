@@ -1,7 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import TaskList from "./TaskList";
+import { useDispatch, useSelector } from "react-redux";
+import { postTasks } from "../../store/taskReducer";
 
-export default function ColumnItem() {
+export default function ColumnItem({ _id, columnName, column }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const { apiKey } = useSelector((state) => state.chello);
+  const { columns } = useSelector((state) => state.tasks);
+  const dispatch = useDispatch();
+  const data = {
+    apiKey: apiKey,
+    data: [
+      {
+        column: "hello",
+        content: "hiihi",
+        columnName: "hello",
+      },
+    ],
+  };
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+  const handleBlur = () => {
+    setIsEditing(false);
+  };
+  const handleChangeColumns = () => {};
+  const handleAddTasks = () => {
+    console.log("vào dây");
+
+    dispatch(postTasks(data));
+  };
   return (
     <div
       className="
@@ -13,13 +41,16 @@ export default function ColumnItem() {
       flex
       flex-col
     "
+      data-id={_id}
     >
       <div
+        onClick={handleEdit}
         role="button"
         tabIndex="0"
         aria-disabled="false"
         aria-roledescription="sortable"
         aria-describedby="DndDescribedBy-0"
+        data-id={_id}
         className="
         bg-mainBackgroundColor
         text-md
@@ -48,10 +79,22 @@ export default function ColumnItem() {
             text-sm
             rounded-full
           "
+            data-id={_id}
           >
             0
           </div>
-          Todo
+          {isEditing ? (
+            <input
+              autoFocus
+              type="text"
+              onChange={handleChangeColumns}
+              value={columnName}
+              onBlur={handleBlur}
+              className="w-full"
+            />
+          ) : (
+            <p className="w-full">{columnName}</p>
+          )}
         </div>
         <button
           className="
@@ -78,7 +121,29 @@ export default function ColumnItem() {
           </svg>
         </button>
       </div>
-      <TaskList />
+      <TaskList column={column} />
+      {/* end taskList */}
+      <button
+        onClick={handleAddTasks}
+        className="flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-teal-500 active:bg-teal-800"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        Add task
+      </button>
+      {/* end addTask */}
     </div>
   );
 }

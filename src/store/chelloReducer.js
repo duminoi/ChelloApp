@@ -32,7 +32,7 @@ const chelloReducer = createSlice({
       })
       .addCase(fetchApikey.fulfilled, (state, action) => {
         toast("Đăng nhập thành công");
-        console.log(action.payload.data);
+        // console.log(action.payload.data);
         state.isLoading = false;
         state.apiKey = action.payload.data.apiKey;
         localStorage.setItem(

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import imgTrello from "../assets/img/trello.png";
 import DropdownMenu from "../components/Dropdown";
-
-import SearchIcon from "@mui/icons-material/Search";
+import searchIcon from "../assets/img/searchIcon.svg";
+import { Avatar, Button } from "antd";
+import { UserOutlined, BellTwoTone } from "@ant-design/icons";
+// import SearchIcon from "@mui/icons-material/Search";
 
 export default function Header() {
   const content = [
@@ -17,7 +19,7 @@ export default function Header() {
   ];
 
   return (
-    <div className="header flex p-5 pl-7 gap-4 justify-between">
+    <div className="header flex fixed min-w-full p-5 pl-7 gap-4 justify-between ">
       <div className="flex gap-4">
         <div className="Icon flex gap-3">
           <img src={imgTrello} alt="" />
@@ -29,8 +31,21 @@ export default function Header() {
         ))}
       </div>
       {/* end left */}
-      <div className="flex relative">
-        <input type="text" className="form-control bg-[#e7e7df99] h-[2rem]" />
+      <div className="flex relative gap-4  items-center justify-center">
+        <div className="search relative">
+          <div className="searchIconWrapper left-2 top-2 absolute h-[1rem] w-[1rem]">
+            <img src={searchIcon} alt="" className="" />
+          </div>
+          <input
+            type="text"
+            className="form-control p-3 pl-[2rem] bg-[#e7e7df99] h-[2rem]"
+            placeholder="Search..."
+          />
+        </div>
+        {/* end search */}
+        <BellTwoTone className="text-3xl" />
+        <Avatar className="" icon={<UserOutlined />} />
+        {/* end Avartar */}
       </div>
     </div>
   );
