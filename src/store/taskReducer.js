@@ -20,15 +20,14 @@ export const fetchTasks = createAsyncThunk("tasks/getTasks", async (apiKey) => {
 });
 
 export const postTasks = createAsyncThunk("tasks/postTasks", async (data) => {
-  //   console.log("data", data);
   const { apiKey, data: info } = data;
-
   try {
-    const response = axios.post(`${apiUrl}/tasks`, info, {
+    const response = await axios.post(`${apiUrl}/tasks`, info, {
       headers: {
         "X-Api-Key": apiKey,
       },
     });
+    // console.log((await response).data);
     return response.data;
   } catch (e) {
     console.log(e);
@@ -45,7 +44,7 @@ const taskReducer = createSlice({
     }),
       builder.addCase(fetchTasks.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log("action", action.payload.data);
+        // console.log("action", action.payload.data);
         const { tasks, columns } = action.payload.data;
         if (state.tasks.length === 0 && state.columns.length === 0) {
           state.tasks.push(...tasks);
@@ -57,7 +56,10 @@ const taskReducer = createSlice({
       }),
       builder.addCase(postTasks.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log("action", action);
+        console.log("action.payload", action.payload.data);
+        const { tasks, columns } = action.payload.data;
+        state.tasks = [...tasks];
+        state.columns = [...columns];
       });
   },
 });

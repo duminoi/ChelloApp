@@ -23,6 +23,10 @@ const chelloReducer = createSlice({
     getEmail: (state, action) => {
       return { ...state, inputEmail: action.payload };
     },
+    handleLogout: (state, action) => {
+      console.log("action.payload", action.payload);
+      state.apiKey = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -32,7 +36,7 @@ const chelloReducer = createSlice({
       })
       .addCase(fetchApikey.fulfilled, (state, action) => {
         toast("Đăng nhập thành công");
-        // console.log(action.payload.data);
+        console.log(action.payload.data);
         state.isLoading = false;
         state.apiKey = action.payload.data.apiKey;
         localStorage.setItem(
@@ -46,5 +50,5 @@ const chelloReducer = createSlice({
   },
 });
 
-export const { setLogin, getEmail } = chelloReducer.actions;
+export const { setLogin, getEmail, handleLogout } = chelloReducer.actions;
 export default chelloReducer.reducer;

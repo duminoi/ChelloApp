@@ -9,6 +9,6 @@ export default function App() {
 
   // const { apiKey } = useSelector((state) => state.chello);
   const apiKey = useSelector(selectApi);
-
+  console.log("apiKey", apiKey);
   return <div className="bg-mainColor">{!apiKey ? <Login /> : <Home />}</div>;
 }

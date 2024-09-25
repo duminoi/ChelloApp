@@ -2,16 +2,29 @@ import React, { useEffect } from "react";
 import ColumnItem from "./ColumnItem";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTasks, postTasks } from "../../store/taskReducer";
-
+import { cloneData } from "../../store/customData";
 export default function ColumnsList() {
   console.log("vào columnsList");
 
   const dispatch = useDispatch();
   const { apiKey } = useSelector((state) => state.chello);
-  const { columns } = useSelector((state) => state.tasks);
-  console.log("columns", columns);
+  const { columns, tasks } = useSelector((state) => state.tasks);
+  // console.log("columns", columns);
+  console.log("columns.length", columns.length);
 
   const handleAddColumn = () => {
+    const clone = cloneData(columns, tasks);
+    const data = {
+      apiKey: apiKey,
+      data: [
+        ...clone,
+        {
+          content: `Write something...`,
+          column: `Column ${columns.length + 1}`,
+          columnName: `Column ${columns.length + 1}`,
+        },
+      ],
+    };
     dispatch(postTasks(data));
   };
   useEffect(() => {
