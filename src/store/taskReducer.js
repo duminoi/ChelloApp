@@ -37,7 +37,26 @@ export const postTasks = createAsyncThunk("tasks/postTasks", async (data) => {
 const taskReducer = createSlice({
   name: "tasks",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    addColumn: (state, action) => {
+      state.columns.push(action.payload);
+    },
+    updateColumn: (state, action) => {
+      state.columns = action.payload;
+    },
+    deleteColumn: (state, action) => {
+      state.columns = action.payload;
+    },
+    addTask: (state, action) => {
+      state.tasks.push(action.payload);
+    },
+    updateTask: (state, action) => {
+      state.tasks = action.payload;
+    },
+    deleteTask: (state, action) => {
+      state.tasks = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchTasks.pending, (state) => {
       state.isLoading = true;
@@ -63,5 +82,12 @@ const taskReducer = createSlice({
       });
   },
 });
-
+export const {
+  addColumn,
+  deleteColumn,
+  updateColumn,
+  addTask,
+  updateTask,
+  deleteTask,
+} = taskReducer.actions;
 export default taskReducer.reducer;

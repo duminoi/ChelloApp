@@ -1,30 +1,51 @@
 import React, { useEffect } from "react";
 import ColumnItem from "./ColumnItem";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTasks, postTasks } from "../../store/taskReducer";
+import { addColumn, fetchTasks, postTasks } from "../../store/taskReducer";
 import { cloneData } from "../../store/customData";
+import { v4 as uuidv4 } from "uuid";
+
 export default function ColumnsList() {
   console.log("vào columnsList");
 
   const dispatch = useDispatch();
   const { apiKey } = useSelector((state) => state.chello);
   const { columns, tasks } = useSelector((state) => state.tasks);
-  // console.log("columns", columns);
-  console.log("columns.length", columns.length);
+  console.log("columns", columns);
 
   const handleAddColumn = () => {
-    const clone = cloneData(columns, tasks);
+    // //Cập nhật UI trước
+    const dataUi = {
+      column: "fake",
+      columnName: `Columns ${columns.length + 1}`,
+      id: "fake",
+    };
+
+    dispatch(addColumn(dataUi));
+    //call Api
+    console.log("columns", columns);
+    console.log("tasks", tasks);
+
+    const clone = cloneData(columns, tasks).filter((item) => {
+      return item !== undefined;
+    });
+    console.log("clone", clone);
+
+    console.log("columns.length ", columns.length + 1);
+
     const data = {
       apiKey: apiKey,
       data: [
         ...clone,
         {
           content: `Write something...`,
-          column: `Column ${columns.length + 1}`,
-          columnName: `Column ${columns.length + 1}`,
+          column: `Column ${uuidv4()}`,
+          columnName: `column ${uuidv4()}`,
         },
       ],
     };
+    console.log("data", data);
+
     dispatch(postTasks(data));
   };
   useEffect(() => {

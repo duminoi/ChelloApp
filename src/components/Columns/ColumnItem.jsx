@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import TaskList from "./TaskList";
 import { useDispatch, useSelector } from "react-redux";
-import { postTasks } from "../../store/taskReducer";
+import {
+  addTask,
+  deleteColumn,
+  postTasks,
+  updateColumn,
+} from "../../store/taskReducer";
 import { cloneData } from "../../store/customData";
+import { closestCorners, DndContext } from "@dnd-kit/core";
 
 export default function ColumnItem({ _id, columnName, column }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -51,6 +57,9 @@ export default function ColumnItem({ _id, columnName, column }) {
       }
       return columnItem;
     });
+    //Update UI first
+    dispatch(updateColumn(filterColumn));
+    //call api
     console.log("filterColumn", filterColumn);
     const clone = cloneData(filterColumn, tasks);
     const data = {
@@ -63,6 +72,15 @@ export default function ColumnItem({ _id, columnName, column }) {
     setInputValue(e.target.value);
   };
   const handleAddTasks = () => {
+    console.log("tasks", tasks);
+    //Update UI first
+    const dataUi = {
+      content: `Task ${tasks.length + 1}`,
+      column: column,
+      columnName: columnName,
+    };
+    dispatch(addTask(dataUi));
+    //Call api
     dispatch(postTasks(data));
   };
 
@@ -70,6 +88,9 @@ export default function ColumnItem({ _id, columnName, column }) {
     const filterColumn = columns.filter((column) => {
       return column._id !== e.target.dataset.id;
     });
+    //Cập nhật UI trước
+    console.log("filterColumn", filterColumn);
+    dispatch(deleteColumn(filterColumn));
     const clone = cloneData(filterColumn, tasks).filter((item) => {
       return item !== undefined;
     });
@@ -78,6 +99,7 @@ export default function ColumnItem({ _id, columnName, column }) {
       apiKey: apiKey,
       data: clone,
     };
+    //Call Api
     dispatch(postTasks(data));
   };
   return (
@@ -178,7 +200,9 @@ export default function ColumnItem({ _id, columnName, column }) {
           </svg>
         </button>
       </div>
+
       <TaskList column={column} columnName={columnName} />
+
       {/* end taskList */}
       <button
         onClick={handleAddTasks}

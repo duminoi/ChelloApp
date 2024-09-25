@@ -2,7 +2,8 @@ import React from "react";
 import TaskItem from "./Tasks/TaskItem";
 import { useSelector } from "react-redux";
 import { useRef, useEffect } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
+// import InfiniteScroll from "react-infinite-scroll-component";
+// import { SortableContext } from "@dnd-kit/sortable";
 export default function TaskList({ column, columnName }) {
   const { tasks } = useSelector((state) => state.tasks);
   // console.log("tasks", tasks);

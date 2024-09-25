@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { postTasks } from "../../../store/taskReducer";
+import { deleteTask, postTasks, updateTask } from "../../../store/taskReducer";
 import { cloneData } from "../../../store/customData";
 
 export default function TaskItem({ _id, content, column, columnName }) {
@@ -23,13 +23,14 @@ export default function TaskItem({ _id, content, column, columnName }) {
       return task;
     });
     console.log("newtask", newTask);
-
+    //update UI first
+    dispatch(updateTask(newTask));
     const clone = cloneData(columns, newTask);
     const data = {
       apiKey: apiKey,
       data: clone,
     };
-
+    //Call Api
     dispatch(postTasks(data));
   };
   const handleChangeContent = (e) => {
@@ -40,12 +41,14 @@ export default function TaskItem({ _id, content, column, columnName }) {
     const filterTasks = tasks.filter((task) => {
       return task._id !== e.target.dataset.id;
     });
-
+    //Update UI first
+    dispatch(deleteTask(filterTasks));
     const clone = cloneData(columns, filterTasks);
     const data = {
       apiKey: apiKey,
       data: clone,
     };
+    //Call Api
     dispatch(postTasks(data));
   };
   return (
