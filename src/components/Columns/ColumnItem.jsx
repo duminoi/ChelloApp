@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import TaskList from "./TaskList";
+import TaskList from "./Tasks/TaskList";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTask,
@@ -8,13 +8,23 @@ import {
   updateColumn,
 } from "../../store/taskReducer";
 import { cloneData } from "../../store/customData";
-import { closestCorners, DndContext } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export default function ColumnItem({ _id, columnName, column }) {
   const [isEditing, setIsEditing] = useState(false);
   const { apiKey } = useSelector((state) => state.chello);
   const { columns, tasks } = useSelector((state) => state.tasks);
   const [inputValue, setInputValue] = useState(columnName);
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: _id });
+  // console.log("attributes", attributes);
+  // console.log("listeners", listeners);
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   const dispatch = useDispatch();
   // console.log("columns", columns);
@@ -32,16 +42,6 @@ export default function ColumnItem({ _id, columnName, column }) {
       },
     ],
   };
-  // const data = {
-  //   apiKey: apiKey,
-  //   data: [
-  //     ...clone,
-  //     {
-  //       column: "new column",
-  //       columnName: "new column",
-  //     },
-  //   ],
-  // };
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -68,6 +68,7 @@ export default function ColumnItem({ _id, columnName, column }) {
     };
     dispatch(postTasks(data));
   };
+
   const handleChangeColumns = (e) => {
     setInputValue(e.target.value);
   };
@@ -104,6 +105,10 @@ export default function ColumnItem({ _id, columnName, column }) {
   };
   return (
     <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
       className="
       bg-white
       w-[350px]

@@ -6,7 +6,7 @@ export default function Home() {
   console.log("vào home");
   return (
     <div>
-      <Header />
+      {/* <Header /> */}
       <ColumnsList></ColumnsList>
     </div>
   );
