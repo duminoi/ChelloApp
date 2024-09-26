@@ -2,13 +2,23 @@ import React, { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTask, postTasks, updateTask } from "../../../store/taskReducer";
 import { cloneData } from "../../../store/customData";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export default function TaskItem({ _id, content, column, columnName }) {
   const [isHover, setHover] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const { tasks, columns } = useSelector((state) => state.tasks);
   const { apiKey } = useSelector((state) => state.chello);
   const [inputValue, setInputValue] = useState(content);
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: _id, disabled: isEditing || isDeleting });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   const dispatch = useDispatch();
   const handleEdit = () => {
     setIsEditing(true);
@@ -53,7 +63,13 @@ export default function TaskItem({ _id, content, column, columnName }) {
   };
   return (
     <div
-      onMouseEnter={() => setHover(true)}
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      onMouseEnter={() => {
+        setHover(true);
+      }}
       onMouseLeave={() => setHover(false)}
       className="bg-mainBackgroundColor p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-teal-500 cursor-grab relative task"
       data-id={_id}
@@ -77,7 +93,17 @@ export default function TaskItem({ _id, content, column, columnName }) {
         </p>
       )}
       {isHover && (
-        <div className="flex">
+        <div
+          onMouseEnter={() => {
+            setIsDeleting(true);
+          }}
+          onMouseLeave={() => {
+            setIsDeleting(false);
+          }}
+          className="flex"
+          data-id={_id}
+          onClick={handleDelete}
+        >
           <button
             onClick={handleDelete}
             data-id={_id}

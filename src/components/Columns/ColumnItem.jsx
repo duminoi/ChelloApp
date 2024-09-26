@@ -88,7 +88,7 @@ export default function ColumnItem({ _id, columnName, column }) {
     const filterColumn = columns.filter((column) => {
       return column._id !== e.target.dataset.id;
     });
-    //Cập nhật UI trước
+    //Update UI first
     console.log("filterColumn", filterColumn);
     dispatch(deleteColumn(filterColumn));
     const clone = cloneData(filterColumn, tasks).filter((item) => {
